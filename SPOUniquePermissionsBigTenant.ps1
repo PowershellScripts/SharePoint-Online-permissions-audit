@@ -2,15 +2,18 @@
 # This report searches for unique permissions across the entire SharePoint Online tenant
 # Depending on size of your sites, it may take a few minutes per each site collection
 
-
-
-
 # Import PnP PowerShell Module
 Import-Module PnP.PowerShell
 
-# Connect to SharePoint Admin Center
+# Variables for app-only authentication
 $AdminUrl = "https://<YourTenantName>-admin.sharepoint.com"
-Connect-PnPOnline -Url $AdminUrl -Interactive
+$TenantId = "<Your-Tenant-ID>"
+$ClientId = "<Your-Client-ID>"
+$CertificatePath = "<Path-To-Your-Certificate>"
+$CertificatePassword = "<Certificate-Password>"
+
+# Authenticate using app-only authentication
+Connect-PnPOnline -Url $AdminUrl -ClientId $ClientId -Tenant $TenantId -CertificatePath $CertificatePath -CertificatePassword (ConvertTo-SecureString -String $CertificatePassword -AsPlainText -Force)
 
 # Retrieve all site collections
 $SiteCollections = Get-PnPTenantSite -IncludeOneDriveSites $false
@@ -82,8 +85,8 @@ function Check-UniquePermissions {
 # Loop through all site collections
 foreach ($Site in $SiteCollections) {
     try {
-        # Connect to each site collection
-        Connect-PnPOnline -Url $Site.Url -Interactive
+        # Connect to each site collection using app-only authentication
+        Connect-PnPOnline -Url $Site.Url -ClientId $ClientId -Tenant $TenantId -CertificatePath $CertificatePath -CertificatePassword (ConvertTo-SecureString -String $CertificatePassword -AsPlainText -Force)
 
         # Get the root web of the site collection
         $RootWeb = Get-PnPWeb
