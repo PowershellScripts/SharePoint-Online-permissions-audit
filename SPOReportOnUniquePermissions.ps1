@@ -2,7 +2,7 @@
 # This report searches for unique permissions across the entire SharePoint Online tenant
 # Depending on size of your sites, it may take about a minute per each site collection
 # If your tenant has a lot of sites and a lot of unique permissions, you may want to switch to another script 
-
+# https://github.com/PowershellScripts/SharePoint-Online-permissions-audit/blob/main/SPOUniquePermissionsBigTenant.ps1
 
 # Import PnP PowerShell Module
 Import-Module PnP.PowerShell
