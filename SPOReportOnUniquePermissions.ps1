@@ -1,15 +1,21 @@
 # Created 2025 by Arleta Wanat
 # This report searches for unique permissions across the entire SharePoint Online tenant
 # Depending on size of your sites, it may take about a minute per each site collection
-# If your tenant has a lot of sites and a lot of unique permissions, you may want to switch to another script 
+# If your tenant has a lot of sites and unique permissions, you may want to switch to another script 
 # https://github.com/PowershellScripts/SharePoint-Online-permissions-audit/blob/main/SPOUniquePermissionsBigTenant.ps1
 
 # Import PnP PowerShell Module
 Import-Module PnP.PowerShell
 
-# Connect to SharePoint Admin Center
+# Define variables for app-only authentication
 $AdminUrl = "https://<YourTenantName>-admin.sharepoint.com"
-Connect-PnPOnline -Url $AdminUrl -Interactive
+$TenantId = "<Your-Tenant-ID>"
+$ClientId = "<Your-Client-ID>"
+$CertificatePath = "<Path-To-Your-Certificate>"
+$CertificatePassword = "<Certificate-Password>"
+
+# Authenticate using app-only authentication
+Connect-PnPOnline -Url $AdminUrl -ClientId $ClientId -Tenant $TenantId -CertificatePath $CertificatePath -CertificatePassword (ConvertTo-SecureString -String $CertificatePassword -AsPlainText -Force)
 
 # Retrieve all site collections
 $SiteCollections = Get-PnPTenantSite -IncludeOneDriveSites $false
@@ -57,7 +63,7 @@ function Check-UniquePermissions {
 foreach ($Site in $SiteCollections) {
     try {
         # Connect to each site collection
-        Connect-PnPOnline -Url $Site.Url -Interactive
+        Connect-PnPOnline -Url $Site.Url -ClientId $ClientId -Tenant $TenantId -CertificatePath $CertificatePath -CertificatePassword (ConvertTo-SecureString -String $CertificatePassword -AsPlainText -Force)
 
         # Get the root web of the site collection
         $RootWeb = Get-PnPWeb
