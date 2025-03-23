@@ -1,3 +1,10 @@
+# Created 2025 by Arleta Wanat
+# This report searches for unique permissions across the entire SharePoint Online tenant
+# Depending on size of your sites, it may take a few minutes per each site collection
+
+
+
+
 # Import PnP PowerShell Module
 Import-Module PnP.PowerShell
 
